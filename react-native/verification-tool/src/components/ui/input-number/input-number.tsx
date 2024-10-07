@@ -1,14 +1,7 @@
+import { memo } from "react";
 import * as React from 'react';
-import {
-  StyleProp,
-  View,
-  ViewStyle,
-  Text,
-  TextInput,
-  ViewProps,
-} from 'react-native';
+import { StyleProp, View, ViewStyle, Text, TextInput, ViewProps } from 'react-native';
 import styles from './styles';
-
 interface Props extends Pick<ViewProps, 'testID'> {
   title?: string;
   style?: StyleProp<ViewStyle>;
@@ -17,23 +10,20 @@ interface Props extends Pick<ViewProps, 'testID'> {
   onChange?: (value?: number) => void;
   placeHolder?: string;
 }
-
-export const InputNumber: React.FC<Props> = ({
+export const InputNumber: React.FC<Props> = memo(({
   style,
   title,
   value,
   editable,
   placeHolder,
-  onChange,
+  onChange
 }) => {
   const [editText, setEditText] = React.useState(value?.toString() ?? '');
-
   React.useEffect(() => {
     if (value != null) {
       setEditText(String(value));
     }
   }, [value]);
-
   const onChangeText = (text: string) => {
     setEditText(text);
     if (text.length === 0) {
@@ -46,28 +36,16 @@ export const InputNumber: React.FC<Props> = ({
     }
     onChange?.(numValue);
   };
-
-  return (
-    <View style={style}>
+  return <View style={style}>
       <View style={styles.containerLayout}>
         <View style={styles.titleBack}>
           <Text style={styles.titleText}>{title}</Text>
         </View>
         <View style={styles.itemBack}>
-          <TextInput
-            keyboardType="number-pad"
-            style={styles.inputText}
-            value={editText}
-            onChangeText={onChangeText}
-            placeholder={placeHolder}
-            editable={editable ?? true}
-          />
+          <TextInput keyboardType="number-pad" style={styles.inputText} value={editText} onChangeText={onChangeText} placeholder={placeHolder} editable={editable ?? true} />
         </View>
       </View>
-    </View>
-  );
-};
-
+    </View>;
+});
 InputNumber.displayName = 'InputNumber';
-
 export default InputNumber;

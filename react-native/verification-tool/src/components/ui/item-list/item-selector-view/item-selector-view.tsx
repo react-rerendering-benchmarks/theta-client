@@ -1,16 +1,10 @@
+import { useCallback } from "react";
+import { memo } from "react";
 import * as React from 'react';
-import {
-  StyleProp,
-  TouchableOpacity,
-  View,
-  ViewStyle,
-  type ButtonProps,
-  Text,
-} from 'react-native';
+import { StyleProp, TouchableOpacity, View, ViewStyle, type ButtonProps, Text } from 'react-native';
 import styles from './styles';
 import type { Item } from '..';
 import { ItemListPopupView } from '../item-list-popup-view';
-
 interface Props extends Pick<ButtonProps, 'disabled' | 'title' | 'testID'> {
   style?: StyleProp<ViewStyle>;
   itemList: Item[];
@@ -18,51 +12,35 @@ interface Props extends Pick<ButtonProps, 'disabled' | 'title' | 'testID'> {
   onSelected?: (item: Item) => void;
   placeHolder?: string;
 }
-
-export const ItemSelectorView: React.FC<Props> = ({
+export const ItemSelectorView: React.FC<Props> = memo(({
   disabled = false,
   style,
   title,
   itemList,
   selectedItem,
   placeHolder,
-  onSelected,
+  onSelected
 }) => {
   const [isShowList, setShowList] = React.useState<boolean>(false);
-
   const onPress = () => {
     setShowList(true);
   };
-  return (
-    <View style={style}>
-      <ItemListPopupView
-        visible={isShowList}
-        title={title}
-        itemList={itemList}
-        selectedItem={selectedItem}
-        onSelected={(item) => {
-          setShowList(false);
-          onSelected?.(item);
-        }}
-      />
+  return <View style={style}>
+      <ItemListPopupView visible={isShowList} title={title} itemList={itemList} selectedItem={selectedItem} onSelected={useCallback(item => {
+      setShowList(false);
+      onSelected?.(item);
+    }, [setShowList])} />
       <View style={styles.containerLayout}>
         <View style={styles.titleBack}>
           <Text style={styles.titleText}>{title}</Text>
         </View>
-        <TouchableOpacity
-          style={styles.itemBack}
-          onPress={onPress}
-          disabled={disabled}
-        >
+        <TouchableOpacity style={styles.itemBack} onPress={onPress} disabled={disabled}>
           <Text style={styles.itemText}>
             {selectedItem?.name || placeHolder || 'select value'}
           </Text>
         </TouchableOpacity>
       </View>
-    </View>
-  );
-};
-
+    </View>;
+});
 ItemSelectorView.displayName = 'ItemSelectorView';
-
 export default ItemSelectorView;

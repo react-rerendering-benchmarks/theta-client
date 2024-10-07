@@ -1,9 +1,7 @@
+import { memo } from "react";
 import React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
-import {
-  NativeStackNavigationOptions,
-  createNativeStackNavigator,
-} from '@react-navigation/native-stack';
+import { NativeStackNavigationOptions, createNativeStackNavigator } from '@react-navigation/native-stack';
 import MenuScreen from './screen/menu-screen';
 import VideoConvertScreen from './screen/video-convert-screen';
 import LivePreviewScreen from './screen/live-preview-screen';
@@ -24,7 +22,6 @@ import BurstCaptureScreen from './screen/burst-capture-screen/burst-capture-scre
 import ContinuousCaptureScreen from './screen/continuous-capture-screen/continuous-capture-screen';
 import MultiBracketCaptureScreen from './screen/multi-bracket-capture-screen/multi-bracket-capture-screen';
 import type { FileInfo } from './modules/theta-client';
-
 export type RootStackParamList = {
   menu: undefined;
   getInfo: undefined;
@@ -48,122 +45,78 @@ export type RootStackParamList = {
     item: FileInfo;
   };
 };
-
 const Stack = createNativeStackNavigator<RootStackParamList>();
-
-const screenOptions = {
+const screenOptions = ({
   headerStyle: {
-    backgroundColor: '#6200ee',
+    backgroundColor: '#6200ee'
   },
   headerTintColor: '#fff',
   headerTitleStyle: {
-    fontWeight: 'bold',
+    fontWeight: 'bold'
   },
-  headerBackTitle: '',
-} as NativeStackNavigationOptions;
-
-const App = () => {
-  return (
-    <NavigationContainer>
+  headerBackTitle: ''
+} as NativeStackNavigationOptions);
+const App = memo(() => {
+  return <NavigationContainer>
       <Stack.Navigator screenOptions={screenOptions}>
-        <Stack.Screen
-          options={{ title: 'Menu' }}
-          name="menu"
-          component={MenuScreen}
-        />
-        <Stack.Screen
-          options={{ title: 'Get Info' }}
-          name="getInfo"
-          component={GetInfoScreen}
-        />
-        <Stack.Screen
-          options={{ title: 'listFiles' }}
-          name="listFiles"
-          component={ListFilesScreen}
-        />
-        <Stack.Screen
-          options={{ title: 'DeleteFiles' }}
-          name="deleteFiles"
-          component={DeleteFilesScreen}
-        />
-        <Stack.Screen
-          options={{ title: 'getMetadata' }}
-          name="getMetadata"
-          component={GetMetadataScreen}
-        />
-        <Stack.Screen
-          options={{ title: 'Live preview' }}
-          name="livePreview"
-          component={LivePreviewScreen}
-        />
-        <Stack.Screen
-          options={{ title: 'VideoConvert' }}
-          name="videoConvert"
-          component={VideoConvertScreen}
-        />
-        <Stack.Screen
-          options={{ title: 'Options' }}
-          name="options"
-          component={OptionsScreen}
-        />
-        <Stack.Screen
-          options={{ title: 'Commands' }}
-          name="commands"
-          component={CommandsScreen}
-        />
-        <Stack.Screen
-          options={{ title: 'Photo Capture' }}
-          name="photoCapture"
-          component={PhotoCaptureScreen}
-        />
-        <Stack.Screen
-          options={{ title: 'Video Capture' }}
-          name="videoCapture"
-          component={VideoCaptureScreen}
-        />
-        <Stack.Screen
-          options={{ title: 'Limitless Interval Capture' }}
-          name="limitlessIntervalCapture"
-          component={LimitlessIntervalCaptureScreen}
-        />
-        <Stack.Screen
-          options={{ title: 'TimeShift Capture' }}
-          name="timeShiftCapture"
-          component={TimeShiftCaptureScreen}
-        />
-        <Stack.Screen
-          options={{ title: 'interval shooting with the shot count specified' }}
-          name="shotCountSpecifiedIntervalCapture"
-          component={ShotCountSpecifiedIntervalCaptureScreen}
-        />
-        <Stack.Screen
-          options={{ title: 'interval composite shooting' }}
-          name="compositeIntervalCapture"
-          component={CompositeIntervalCaptureScreen}
-        />
-        <Stack.Screen
-          options={{ title: 'burst shooting' }}
-          name="burstCapture"
-          component={BurstCaptureScreen}
-        />
-        <Stack.Screen
-          options={{ title: 'MultiBracket Capture' }}
-          name="multiBracketCapture"
-          component={MultiBracketCaptureScreen}
-        />
-        <Stack.Screen
-          options={{ title: 'continuous shooting' }}
-          name="continuousCapture"
-          component={ContinuousCaptureScreen}
-        />
-        <Stack.Screen
-          options={{ title: 'Preview' }}
-          name="filePreview"
-          component={FilePreviewScreen}
-        />
+        <Stack.Screen options={{
+        title: 'Menu'
+      }} name="menu" component={MenuScreen} />
+        <Stack.Screen options={{
+        title: 'Get Info'
+      }} name="getInfo" component={GetInfoScreen} />
+        <Stack.Screen options={{
+        title: 'listFiles'
+      }} name="listFiles" component={ListFilesScreen} />
+        <Stack.Screen options={{
+        title: 'DeleteFiles'
+      }} name="deleteFiles" component={DeleteFilesScreen} />
+        <Stack.Screen options={{
+        title: 'getMetadata'
+      }} name="getMetadata" component={GetMetadataScreen} />
+        <Stack.Screen options={{
+        title: 'Live preview'
+      }} name="livePreview" component={LivePreviewScreen} />
+        <Stack.Screen options={{
+        title: 'VideoConvert'
+      }} name="videoConvert" component={VideoConvertScreen} />
+        <Stack.Screen options={{
+        title: 'Options'
+      }} name="options" component={OptionsScreen} />
+        <Stack.Screen options={{
+        title: 'Commands'
+      }} name="commands" component={CommandsScreen} />
+        <Stack.Screen options={{
+        title: 'Photo Capture'
+      }} name="photoCapture" component={PhotoCaptureScreen} />
+        <Stack.Screen options={{
+        title: 'Video Capture'
+      }} name="videoCapture" component={VideoCaptureScreen} />
+        <Stack.Screen options={{
+        title: 'Limitless Interval Capture'
+      }} name="limitlessIntervalCapture" component={LimitlessIntervalCaptureScreen} />
+        <Stack.Screen options={{
+        title: 'TimeShift Capture'
+      }} name="timeShiftCapture" component={TimeShiftCaptureScreen} />
+        <Stack.Screen options={{
+        title: 'interval shooting with the shot count specified'
+      }} name="shotCountSpecifiedIntervalCapture" component={ShotCountSpecifiedIntervalCaptureScreen} />
+        <Stack.Screen options={{
+        title: 'interval composite shooting'
+      }} name="compositeIntervalCapture" component={CompositeIntervalCaptureScreen} />
+        <Stack.Screen options={{
+        title: 'burst shooting'
+      }} name="burstCapture" component={BurstCaptureScreen} />
+        <Stack.Screen options={{
+        title: 'MultiBracket Capture'
+      }} name="multiBracketCapture" component={MultiBracketCaptureScreen} />
+        <Stack.Screen options={{
+        title: 'continuous shooting'
+      }} name="continuousCapture" component={ContinuousCaptureScreen} />
+        <Stack.Screen options={{
+        title: 'Preview'
+      }} name="filePreview" component={FilePreviewScreen} />
       </Stack.Navigator>
-    </NavigationContainer>
-  );
-};
-
+    </NavigationContainer>;
+});
 export default App;

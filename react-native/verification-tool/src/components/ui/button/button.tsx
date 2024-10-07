@@ -1,40 +1,23 @@
+import { memo } from "react";
 import * as React from 'react';
-import {
-  StyleProp,
-  TouchableOpacity,
-  View,
-  ViewStyle,
-  type ButtonProps,
-  Text,
-} from 'react-native';
+import { StyleProp, TouchableOpacity, View, ViewStyle, type ButtonProps, Text } from 'react-native';
 import styles from './styles';
-
-interface Props
-  extends Pick<ButtonProps, 'disabled' | 'onPress' | 'title' | 'testID'> {
+interface Props extends Pick<ButtonProps, 'disabled' | 'onPress' | 'title' | 'testID'> {
   style?: StyleProp<ViewStyle>;
 }
-
-export const Button: React.FC<Props> = ({
+export const Button: React.FC<Props> = memo(({
   disabled = false,
   onPress,
   style,
-  title,
+  title
 }) => {
-  return (
-    <View style={style}>
-      <TouchableOpacity
-        style={disabled ? styles.buttonBackDisabled : styles.buttonBack}
-        disabled={disabled}
-        onPress={onPress}
-      >
+  return <View style={style}>
+      <TouchableOpacity style={disabled ? styles.buttonBackDisabled : styles.buttonBack} disabled={disabled} onPress={onPress}>
         <Text style={styles.button} disabled={disabled}>
           {title}
         </Text>
       </TouchableOpacity>
-    </View>
-  );
-};
-
+    </View>;
+});
 Button.displayName = 'Button';
-
 export default Button;

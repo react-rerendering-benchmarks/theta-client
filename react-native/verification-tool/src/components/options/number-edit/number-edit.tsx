@@ -1,45 +1,35 @@
+import { useCallback } from "react";
+import { memo } from "react";
 import * as React from 'react';
 import type { OptionEditProps } from '..';
 import { InputNumber } from '../../ui/input-number';
 import type { Options } from '../../../modules/theta-client';
-
 interface Props extends OptionEditProps {
   propName: string;
   placeHolder?: string;
 }
-
-export const NumberEdit: React.FC<Props> = ({
+export const NumberEdit: React.FC<Props> = memo(({
   propName,
   onChange,
   options,
-  placeHolder,
+  placeHolder
 }) => {
   const getOptionPropNumber = (_options: Options, _propName: string) => {
     if (_options != null) {
-      const option = Object.entries(_options).find(
-        (element) => element[0] === _propName
-      );
+      const option = Object.entries(_options).find(element => element[0] === _propName);
       if (option != null) {
-        return option[1] as number;
+        return (option[1] as number);
       }
     }
     return undefined;
   };
-  return (
-    <InputNumber
-      title={propName}
-      placeHolder={placeHolder}
-      value={
-        options != null ? getOptionPropNumber(options, propName) : undefined
-      }
-      onChange={(value) => {
-        let option = { ...options, [propName]: value };
-        onChange(option);
-      }}
-    />
-  );
-};
-
+  return <InputNumber title={propName} placeHolder={placeHolder} value={options != null ? getOptionPropNumber(options, propName) : undefined} onChange={useCallback(value => {
+    let option = {
+      ...options,
+      [propName]: value
+    };
+    onChange(option);
+  }, [options])} />;
+});
 NumberEdit.displayName = 'NumberEdit';
-
 export default NumberEdit;

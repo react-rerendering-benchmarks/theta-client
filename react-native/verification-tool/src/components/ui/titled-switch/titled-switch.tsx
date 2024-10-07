@@ -1,42 +1,30 @@
+import { memo } from "react";
 import * as React from 'react';
-import {
-  StyleProp,
-  View,
-  ViewStyle,
-  Text,
-  ViewProps,
-  Switch,
-} from 'react-native';
+import { StyleProp, View, ViewStyle, Text, ViewProps, Switch } from 'react-native';
 import styles from './styles';
-
 interface Props extends Pick<ViewProps, 'testID'> {
   title?: string;
   style?: StyleProp<ViewStyle>;
   value?: boolean;
   onChange?: (value: boolean) => void;
 }
-
-export const TitledSwitch: React.FC<Props> = ({
+export const TitledSwitch: React.FC<Props> = memo(({
   style,
   title,
   value,
-  onChange,
+  onChange
 }) => {
   const [editValue, setEditValue] = React.useState(value ?? false);
-
   React.useEffect(() => {
     if (value != null) {
       setEditValue(value);
     }
   }, [value]);
-
   const onChangeValue = (newValue: boolean) => {
     setEditValue(newValue);
     onChange?.(newValue);
   };
-
-  return (
-    <View style={style}>
+  return <View style={style}>
       <View style={styles.containerLayout}>
         <View style={styles.titleBack}>
           <Text style={styles.titleText}>{title}</Text>
@@ -45,10 +33,7 @@ export const TitledSwitch: React.FC<Props> = ({
           <Switch value={editValue} onValueChange={onChangeValue} />
         </View>
       </View>
-    </View>
-  );
-};
-
+    </View>;
+});
 TitledSwitch.displayName = 'TitledSwitch';
-
 export default TitledSwitch;

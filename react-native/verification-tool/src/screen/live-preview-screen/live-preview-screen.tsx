@@ -1,92 +1,67 @@
+import { useRef } from "react";
+import { useCallback } from "react";
+import { memo } from "react";
 import React from 'react';
-import {
-  View,
-  NativeModules,
-  NativeEventEmitter,
-  Alert,
-  Text,
-  Platform,
-} from 'react-native';
+import { View, NativeModules, NativeEventEmitter, Alert, Text, Platform } from 'react-native';
 import styles from './styles';
-import {
-  getLivePreview,
-  isInitialized,
-  stopLivePreview,
-  THETA_EVENT_NAME,
-} from '../../modules/theta-client';
+import { getLivePreview, isInitialized, stopLivePreview, THETA_EVENT_NAME } from '../../modules/theta-client';
 import { useIsFocused } from '@react-navigation/native';
 import Button from '../../components/ui/button';
 import WebView from 'react-native-webview';
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import type { RootStackParamList } from '../../App';
-
-const LivePreviewScreen: React.FC<
-  NativeStackScreenProps<RootStackParamList, 'livePreview'>
-> = () => {
+const LivePreviewScreen: React.FC<NativeStackScreenProps<RootStackParamList, 'livePreview'>> = memo(() => {
   const isFocused = useIsFocused();
-  const [dataUrl, setDataUrl] = React.useState<string | undefined>();
+  const dataUrl = React.useState<string | undefined>();
   const [previewing, setPreviewing] = React.useState<boolean>(false);
-  const [isLoaded, setLoaded] = React.useState(false);
+  const isLoaded = React.useState(false);
   const webViewRef = React.useRef<WebView>(null);
-  const source =
-    Platform.OS === 'android'
-      ? 'file:///android_asset/live-preview/index.html'
-      : './Web.bundle/live-preview/index.html';
-
+  const source = Platform.OS === 'android' ? 'file:///android_asset/live-preview/index.html' : './Web.bundle/live-preview/index.html';
   const startLivePreview = async () => {
     setPreviewing(true);
-    getLivePreview()
-      .then((x) => {
-        setPreviewing(false);
-        console.log(`live preview done with ${x}`);
-      })
-      .catch((error) => {
-        setPreviewing(false);
-        Alert.alert('getLivePreview', 'error: \n' + JSON.stringify(error), [
-          { text: 'OK' },
-        ]);
-      });
+    getLivePreview().then(x => {
+      setPreviewing(false);
+      console.log(`live preview done with ${x}`);
+    }).catch(error => {
+      setPreviewing(false);
+      Alert.alert('getLivePreview', 'error: \n' + JSON.stringify(error), [{
+        text: 'OK'
+      }]);
+    });
   };
-
   const setFrameData = (data: string) => {
-    if (isLoaded && webViewRef.current) {
+    if (isLoaded.current && webViewRef.current) {
       webViewRef.current.injectJavaScript(`
       setFrame('${data}');true
       `);
     }
   };
-
-  const onStart = () => {
+  const onStart = useCallback(() => {
     startLivePreview();
-  };
-
-  const onStop = () => {
-    isInitialized().then((isInit) => {
+  }, []);
+  const onStop = useCallback(() => {
+    isInitialized().then(isInit => {
       if (isInit) {
         stopLivePreview();
       } else {
-        Alert.alert('stopLivePreview', 'error: Not initialized.', [
-          { text: 'OK' },
-        ]);
+        Alert.alert('stopLivePreview', 'error: Not initialized.', [{
+          text: 'OK'
+        }]);
       }
     });
-  };
-
+  }, []);
   const onLoad = () => {
     console.log('onLoad');
-    setLoaded(true);
+    isLoaded.current = true;
   };
-
   React.useEffect(() => {
     if (isFocused) {
-      const emitter = new NativeEventEmitter(
-        NativeModules.ThetaClientReactNative
-      );
-      const eventListener = emitter.addListener(THETA_EVENT_NAME, (event) => {
-        setDataUrl(event.data);
+      const emitter = new NativeEventEmitter(NativeModules.ThetaClientReactNative);
+      const eventListener = emitter.addListener(THETA_EVENT_NAME, event => {
+        dataUrl.current = event.data;
       });
       return () => {
-        isInitialized().then((isInit) => {
+        isInitialized().then(isInit => {
           if (isInit) {
             stopLivePreview();
           }
@@ -96,24 +71,17 @@ const LivePreviewScreen: React.FC<
     }
     return;
   }, [isFocused]);
-
   React.useEffect(() => {
-    if (isLoaded && dataUrl) {
-      setFrameData(dataUrl);
+    if (isLoaded.current && dataUrl.current) {
+      setFrameData(dataUrl.current);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [dataUrl, isLoaded]);
-
-  return (
-    <View style={styles.takePhotoBack}>
+  }, [dataUrl.current, isLoaded.current]);
+  return <View style={styles.takePhotoBack}>
       <View style={styles.contentContainer}>
-        <WebView
-          style={styles.webview}
-          ref={webViewRef}
-          originWhitelist={['*']}
-          source={{ uri: source }}
-          onLoad={onLoad}
-        />
+        <WebView style={styles.webview} ref={webViewRef} originWhitelist={['*']} source={{
+        uri: source
+      }} onLoad={onLoad} />
       </View>
       <View style={styles.bottomViewContainer}>
         <Text>{previewing ? 'Previewing...' : 'Stopped'}</Text>
@@ -122,8 +90,6 @@ const LivePreviewScreen: React.FC<
           <Button style={styles.button} title="Stop" onPress={onStop} />
         </View>
       </View>
-    </View>
-  );
-};
-
+    </View>;
+});
 export default LivePreviewScreen;
